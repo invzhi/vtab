@@ -1,5 +1,5 @@
-#ifndef VTAB_DISK_H
-#define VTAB_DISK_H
+#ifndef VTAB_DISK_DISK_H
+#define VTAB_DISK_DISK_H
 
 #include <string>
 #include <fstream>

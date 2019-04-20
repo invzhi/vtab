@@ -1,5 +1,5 @@
-#ifndef VTAB_LRU_H
-#define VTAB_LRU_H
+#ifndef VTAB_BUFFER_LRU_H
+#define VTAB_BUFFER_LRU_H
 
 #include <mutex>
 #include <list>

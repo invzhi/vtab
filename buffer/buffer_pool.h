@@ -1,5 +1,5 @@
-#ifndef VTAB_BUFFER_POOL_H
-#define VTAB_BUFFER_POOL_H
+#ifndef VTAB_BUFFER_BUFFER_POOL_H
+#define VTAB_BUFFER_BUFFER_POOL_H
 
 #include <list>
 #include <mutex>

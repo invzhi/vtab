@@ -1,5 +1,5 @@
-#ifndef VTAB_PAGE_H
-#define VTAB_PAGE_H
+#ifndef VTAB_PAGE_PAGE_H
+#define VTAB_PAGE_PAGE_H
 
 #include "config.h"
 
