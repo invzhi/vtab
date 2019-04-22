@@ -19,7 +19,7 @@ TEST(BufferPoolTest, SampleTest) {
 
   Page *page_zero = buffer_pool.NewPage();
   ASSERT_NE(nullptr, page_zero);
-  EXPECT_EQ(0, page_zero->page_id());
+  EXPECT_EQ(0, page_zero->id());
 
   // change page content
   strcpy(page_zero->data(), "Hello");

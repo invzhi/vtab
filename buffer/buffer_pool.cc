@@ -33,16 +33,16 @@ Page *BufferPool::NewPage() {
     page = free_list_->front();
     free_list_->pop_front();
   } else if (replacer_->Victim(page)) {
-    page_table_->erase(page->page_id_);
+    page_table_->erase(page->id_);
     if (page->is_dirty_) {
-      disk_->WritePage(page->page_id_, page->data_);
+      disk_->WritePage(page->id_, page->data_);
       page->is_dirty_ = false;
     }
   } else {
     return nullptr;
   }
 
-  page->page_id_ = page_id;
+  page->id_ = page_id;
   ++page->pin_count_;
   page_table_->insert(std::make_pair(page_id, page));
   return page;
@@ -65,16 +65,16 @@ Page *BufferPool::FetchPage(PageID page_id) {
     page = free_list_->front();
     free_list_->pop_front();
   } else if (replacer_->Victim(page)) {
-    page_table_->erase(page->page_id_);
+    page_table_->erase(page->id_);
     if (page->is_dirty_) {
-      disk_->WritePage(page->page_id_, page->data_);
+      disk_->WritePage(page->id_, page->data_);
       page->is_dirty_ = false;
     }
   } else {
     return nullptr;
   }
 
-  page->page_id_ = page_id;
+  page->id_ = page_id;
   ++page->pin_count_;
   disk_->ReadPage(page_id, page->data_);
   page_table_->insert(std::make_pair(page_id, page));

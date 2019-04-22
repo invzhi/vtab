@@ -16,11 +16,11 @@ class Page {
   void WLock() { mutex_.lock(); }
   void WUnlock() { mutex_.unlock(); }
 
-  PageID page_id() const { return page_id_; }
+  PageID id() const { return id_; }
   char *data() { return data_; }
 
  private:
-  PageID page_id_;
+  PageID id_;
   int pin_count_ = 0;
   bool is_dirty_ = false;
 
