@@ -15,14 +15,18 @@ class DataPage : public Page {
   bool InsertTuple(RowID &row_id, const Tuple &tuple);
   bool DeleteTuple(const RowID &row_id);
   bool UpdateTuple(const RowID &row_id, const Tuple &tuple);
+
+  PageID GetNextPageID() {
+    return *reinterpret_cast<PageID *>(data() + 8);
+  }
+
+  void SetNextPageID(PageID next_page_id) {
+    *reinterpret_cast<PageID *>(data() + 8) = next_page_id;
+  }
   
  private:
   PageID GetPrevPageID() {
     return *reinterpret_cast<PageID *>(data() + 4);
-  }
-
-  PageID GetNextPageID() {
-    return *reinterpret_cast<PageID *>(data() + 8);
   }
 
   int32_t GetFreePointer() {
@@ -47,10 +51,6 @@ class DataPage : public Page {
 
   void SetPrevPageID(PageID prev_page_id) {
     *reinterpret_cast<PageID *>(data() + 4) = prev_page_id;
-  }
-
-  void SetNextPageID(PageID next_page_id) {
-    *reinterpret_cast<PageID *>(data() + 8) = next_page_id;
   }
 
   void SetFreePointer(int32_t free_pointer) {
