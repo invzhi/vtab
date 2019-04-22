@@ -15,7 +15,7 @@ class Value {
   friend class Text;
 
  public:
-  Value(TypeID type_id, int value) : type_id_(type_id) {
+  Value(TypeID type_id, int64_t value) : type_id_(type_id) {
     value_.integer = value;
   }
 
