@@ -5,6 +5,9 @@
 
 #include "config.h"
 
+#define HEADER_PAGE_ID 0
+#define INVALID_PAGE_ID -1
+
 using PageID = int32_t;
 
 class Page {
