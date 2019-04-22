@@ -13,7 +13,7 @@ TEST(BufferPoolTest, SampleTest) {
   std::ofstream f;
   f.open("test.db");
   f.close();
-  
+
   Disk disk("test.db");
   BufferPool buffer_pool(10, &disk);
 
@@ -22,7 +22,7 @@ TEST(BufferPoolTest, SampleTest) {
   EXPECT_EQ(0, page_zero->id());
 
   // change page content
-  strcpy(page_zero->data(), "Hello");
+  std::strcpy(page_zero->data(), "Hello");
 
   for (int i = 1; i < 10; ++i) {
     EXPECT_NE(nullptr, buffer_pool.NewPage());
