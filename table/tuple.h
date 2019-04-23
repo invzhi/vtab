@@ -7,8 +7,6 @@
 #include "type/value.h"
 
 class Tuple {
-  friend class DataPage;
-
  public:
   Tuple() = default;
   Tuple(const Schema *schema, const std::vector<Value> values);
@@ -19,6 +17,15 @@ class Tuple {
 
   int32_t length() const { return length_; }
   const char *data() const { return data_; }
+
+  void SetData(const void *src, int32_t length) {
+    length_ = length;
+    if (allocated_)
+      delete[] data_;
+    data_ = new char[length];
+    allocated_ = true;
+    std::memcpy(data_, src, length);
+  }
 
  private:
   int32_t length_;

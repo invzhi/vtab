@@ -37,12 +37,7 @@ bool DataPage::GetTuple(const int32_t slot_number, Tuple &tuple) {
   
   int32_t offset = GetTupleOffset(slot_number);
   int32_t size = GetTupleSize(slot_number);
-  tuple.length_ = size;
-  if (tuple.allocated_)
-    delete[] tuple.data_;
-  tuple.data_ = new char[size];
-  tuple.allocated_ = true;
-  std::memcpy(tuple.data_, data() + offset, size);
+  tuple.SetData(data() + offset, size);
   return true;
 }
 
