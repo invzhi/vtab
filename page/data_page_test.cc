@@ -29,27 +29,36 @@ TEST(DataPageTest, CRUDTest) {
     EXPECT_TRUE(std::memcmp(tuple.data(), str.c_str(), tuple.length()) == 0);
   }
   // update
-  Tuple updated_tuple;
-  updated_tuple.SetData("updated", 7);
-  EXPECT_FALSE(data_page.UpdateTuple(12, updated_tuple));
-  EXPECT_TRUE(data_page.UpdateTuple(2, updated_tuple));
+  Tuple updated_tuple2;
+  updated_tuple2.SetData("updated", 7);
+  EXPECT_FALSE(data_page.UpdateTuple(12, updated_tuple2));
+  EXPECT_TRUE(data_page.UpdateTuple(2, updated_tuple2));
+  Tuple updated_tuple4;
+  updated_tuple4.SetData("12345678901234567890", 20);
+  EXPECT_TRUE(data_page.UpdateTuple(4, updated_tuple4));
   // get again
   EXPECT_TRUE(data_page.GetTuple(2, tuple));
-  EXPECT_TRUE(std::memcmp(tuple.data(), updated_tuple.data(), tuple.length()) == 0);
-  for (int i = 0; i < 5; ++i) {
+  EXPECT_TRUE(std::memcmp(tuple.data(), updated_tuple2.data(), tuple.length()) == 0);
+  for (int i = 0; i < 4; ++i) {
     if (i == 2) continue;
     std::string str(10+i, 'a'+i);
     EXPECT_TRUE(data_page.GetTuple(i, tuple));
     EXPECT_TRUE(std::memcmp(tuple.data(), str.c_str(), tuple.length()) == 0);
   }
+  EXPECT_TRUE(data_page.GetTuple(4, tuple));
+  EXPECT_TRUE(std::memcmp(tuple.data(), updated_tuple4.data(), tuple.length()) == 0);
   // delete
   EXPECT_FALSE(data_page.DeleteTuple(10));
   EXPECT_TRUE(data_page.DeleteTuple(0));
   // get again
-  for (int i = 1; i < 5; ++i) {
+  for (int i = 1; i < 4; ++i) {
     if (i == 2) continue;
     std::string str(10+i, 'a'+i);
     EXPECT_TRUE(data_page.GetTuple(i-1, tuple));
     EXPECT_TRUE(std::memcmp(tuple.data(), str.c_str(), tuple.length()) == 0);
   }
+  EXPECT_TRUE(data_page.GetTuple(1, tuple));
+  EXPECT_TRUE(std::memcmp(tuple.data(), updated_tuple2.data(), tuple.length()) == 0);
+  EXPECT_TRUE(data_page.GetTuple(3, tuple));
+  EXPECT_TRUE(std::memcmp(tuple.data(), updated_tuple4.data(), tuple.length()) == 0);
 }
