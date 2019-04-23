@@ -26,7 +26,7 @@ TEST(DataPageTest, CRUDTest) {
   for (int i = 0; i < 5; ++i) {
     std::string str(10+i, 'a'+i);
     EXPECT_TRUE(data_page.GetTuple(i, tuple));
-    EXPECT_TRUE(std::strncmp(tuple.data(), str.c_str(), tuple.length()) == 0);
+    EXPECT_TRUE(std::memcmp(tuple.data(), str.c_str(), tuple.length()) == 0);
   }
   // update
   Tuple updated_tuple;
@@ -35,12 +35,12 @@ TEST(DataPageTest, CRUDTest) {
   EXPECT_TRUE(data_page.UpdateTuple(2, updated_tuple));
   // get again
   EXPECT_TRUE(data_page.GetTuple(2, tuple));
-  EXPECT_TRUE(std::strncmp(tuple.data(), updated_tuple.data(), tuple.length()) == 0);
+  EXPECT_TRUE(std::memcmp(tuple.data(), updated_tuple.data(), tuple.length()) == 0);
   for (int i = 0; i < 5; ++i) {
     if (i == 2) continue;
     std::string str(10+i, 'a'+i);
     EXPECT_TRUE(data_page.GetTuple(i, tuple));
-    EXPECT_TRUE(std::strncmp(tuple.data(), str.c_str(), tuple.length()) == 0);
+    EXPECT_TRUE(std::memcmp(tuple.data(), str.c_str(), tuple.length()) == 0);
   }
   // delete
   EXPECT_FALSE(data_page.DeleteTuple(10));
@@ -50,6 +50,6 @@ TEST(DataPageTest, CRUDTest) {
     if (i == 2) continue;
     std::string str(10+i, 'a'+i);
     EXPECT_TRUE(data_page.GetTuple(i-1, tuple));
-    EXPECT_TRUE(std::strncmp(tuple.data(), str.c_str(), tuple.length()) == 0);
+    EXPECT_TRUE(std::memcmp(tuple.data(), str.c_str(), tuple.length()) == 0);
   }
 }
