@@ -32,17 +32,17 @@ TEST(DataPageTest, CRUDTest) {
   Tuple tuple4 = ConstructTuple(4, 4.4, "tuple4");
   Tuple updated_tuple = ConstructTuple(5, 5.5, "updated");
   // insert
-  RowID row_id;
-  EXPECT_EQ(true, data_page.InsertTuple(row_id, tuple0));
-  EXPECT_EQ(0, row_id.slot_number());
-  EXPECT_EQ(true, data_page.InsertTuple(row_id, tuple1));
-  EXPECT_EQ(1, row_id.slot_number());
-  EXPECT_EQ(true, data_page.InsertTuple(row_id, tuple2));
-  EXPECT_EQ(2, row_id.slot_number());
-  EXPECT_EQ(true, data_page.InsertTuple(row_id, tuple3));
-  EXPECT_EQ(3, row_id.slot_number());
-  EXPECT_EQ(true, data_page.InsertTuple(row_id, tuple4));
-  EXPECT_EQ(4, row_id.slot_number());
+  int32_t slot_number;
+  EXPECT_EQ(true, data_page.InsertTuple(slot_number, tuple0));
+  EXPECT_EQ(0, slot_number);
+  EXPECT_EQ(true, data_page.InsertTuple(slot_number, tuple1));
+  EXPECT_EQ(1, slot_number);
+  EXPECT_EQ(true, data_page.InsertTuple(slot_number, tuple2));
+  EXPECT_EQ(2, slot_number);
+  EXPECT_EQ(true, data_page.InsertTuple(slot_number, tuple3));
+  EXPECT_EQ(3, slot_number);
+  EXPECT_EQ(true, data_page.InsertTuple(slot_number, tuple4));
+  EXPECT_EQ(4, slot_number);
   // get
   Tuple tuple;
   EXPECT_EQ(false, data_page.GetTuple(10, tuple));

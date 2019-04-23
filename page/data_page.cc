@@ -13,7 +13,7 @@ void DataPage::Init(PageID prev_page_id) {
   SetTupleCount(0);
 }
 
-bool DataPage::InsertTuple(RowID &row_id, const Tuple &tuple) {
+bool DataPage::InsertTuple(int32_t &slot_number, const Tuple &tuple) {
   if (GetFreeSpace() < tuple.length() + 8)
     return false;
 
@@ -26,13 +26,12 @@ bool DataPage::InsertTuple(RowID &row_id, const Tuple &tuple) {
   SetTupleOffset(i, offset);
   SetTupleSize(i, tuple.length());
   SetTupleCount(i+1);
-  // rowid
-  row_id.Set(id(), i);
+
+  slot_number = i;
   return true;
 }
 
-bool DataPage::GetTuple(const RowID &row_id, Tuple &tuple) {
-  int32_t slot_number = row_id.slot_number();
+bool DataPage::GetTuple(const int32_t slot_number, Tuple &tuple) {
   if (slot_number >= GetTupleCount())
     return false;
   
@@ -47,8 +46,7 @@ bool DataPage::GetTuple(const RowID &row_id, Tuple &tuple) {
   return true;
 }
 
-bool DataPage::DeleteTuple(const RowID &row_id) {
-  int32_t slot_number = row_id.slot_number();
+bool DataPage::DeleteTuple(const int32_t slot_number) {
   if (slot_number >= GetTupleCount())
     return false;
 
@@ -69,8 +67,7 @@ bool DataPage::DeleteTuple(const RowID &row_id) {
   return true;
 }
 
-bool DataPage::UpdateTuple(const RowID &row_id, const Tuple &tuple) {
-  int32_t slot_number = row_id.slot_number();
+bool DataPage::UpdateTuple(const int32_t slot_number, const Tuple &tuple) {
   if (slot_number >= GetTupleCount())
     return false;
 

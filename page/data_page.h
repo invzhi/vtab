@@ -11,10 +11,10 @@ class DataPage : public Page {
  public:
   void Init(PageID prev_page_id);
 
-  bool GetTuple(const RowID &row_id, Tuple &tuple);
-  bool InsertTuple(RowID &row_id, const Tuple &tuple);
-  bool DeleteTuple(const RowID &row_id);
-  bool UpdateTuple(const RowID &row_id, const Tuple &tuple);
+  bool GetTuple(const int32_t slot_number, Tuple &tuple);
+  bool InsertTuple(int32_t &slot_number, const Tuple &tuple);
+  bool DeleteTuple(const int32_t slot_number);
+  bool UpdateTuple(const int32_t slot_number, const Tuple &tuple);
 
   PageID GetNextPageID() {
     return *reinterpret_cast<PageID *>(data() + 8);
