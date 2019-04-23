@@ -79,6 +79,7 @@ bool DataPage::UpdateTuple(const int32_t slot_number, const Tuple &tuple) {
   int32_t shift = size - tuple.length();
   std::memmove(data() + free_pointer + shift,
                data() + free_pointer, offset - free_pointer);
+  std::memcpy(data() + offset + shift, tuple.data(), tuple.length());
   // header
   SetTupleOffset(slot_number, offset + shift);
   SetTupleSize(slot_number, tuple.length());
