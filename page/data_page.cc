@@ -80,6 +80,8 @@ bool DataPage::UpdateTuple(const RowID &row_id, const Tuple &tuple) {
     std::memcpy(data() + offset, tuple.data(), size);
     return true;
   }
+  if (GetFreeSpace() < tuple.length() - size)
+    return false;
   // data
   int32_t free_pointer = GetFreePointer();
   int32_t shift = size - tuple.length();
