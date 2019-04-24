@@ -15,8 +15,13 @@ class Tuple {
       delete[] data_;
   }
 
+  // Tuple(const Tuple &other);
+  // Tuple &operator=(const Tuple &other);
+
   int32_t length() const { return length_; }
   const char *data() const { return data_; }
+
+  Value GetValue(Schema *schema, const int column_id);
 
   void SetData(const void *src, int32_t length) {
     length_ = length;
@@ -28,8 +33,8 @@ class Tuple {
   }
 
  private:
-  int32_t length_;
-  char *data_;
+  int32_t length_ = 0;
+  char *data_ = nullptr;
   bool allocated_ = false;
 };
 
