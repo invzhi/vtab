@@ -17,7 +17,7 @@ TEST(TableHeapTest, CRUDTest) {
   f.close();
 
   Disk disk("test.db");
-  BufferPool buffer_pool(10, &disk);
+  BufferPool buffer_pool(100, &disk);
   TableHeap table_heap(&buffer_pool);
 
   Tuple tuple;

@@ -48,13 +48,13 @@ bool TableHeap::InsertTuple(RowID &row_id, const Tuple &tuple) {
         return false;
       }
 
+      data_page->SetNextPageID(next_page->id());
+      data_page->WUnlock();
+
       next_page->WLock();
       next_page->Init(data_page->id());
 
-      data_page->SetNextPageID(next_page->id());
-      data_page->WUnlock();
       buffer_pool_->UnpinPage(data_page->id(), true);
-
       data_page = next_page;
     }
   }
