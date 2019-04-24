@@ -1,6 +1,7 @@
 #include "table/table_heap.h"
 
 #include "page/page.h"
+#include "table/table_iterator.h"
 
 bool TableHeap::GetTuple(const RowID &row_id, Tuple &tuple) {
   PageID page_id = row_id.page_id();
@@ -90,4 +91,14 @@ bool TableHeap::DeleteTuple(const RowID &row_id) {
 
   buffer_pool_->UnpinPage(page_id, is_deleted);
   return true;
+}
+
+TableIterator TableHeap::begin() {
+  RowID row_id(first_page_id_, 0);
+  return TableIterator(this, row_id);
+}
+
+TableIterator TableHeap::end() {
+  RowID row_id;
+  return TableIterator(this, row_id);
 }

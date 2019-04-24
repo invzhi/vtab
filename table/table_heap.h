@@ -7,7 +7,11 @@
 #include "page/data_page.h"
 #include "buffer/buffer_pool.h"
 
+class TableIterator;
+
 class TableHeap {
+  friend class TableIterator;
+
  public:
   TableHeap(BufferPool *buffer_pool, PageID first_page_id)
       : buffer_pool_(buffer_pool), first_page_id_(first_page_id) {}
@@ -24,6 +28,9 @@ class TableHeap {
   bool InsertTuple(RowID &row_id, const Tuple &tuple);
   bool UpdateTuple(const RowID &row_id, const Tuple &tuple);
   bool DeleteTuple(const RowID &row_id);
+
+  TableIterator begin();
+  TableIterator end();
 
   PageID first_page_id() const { return first_page_id_; }
 
