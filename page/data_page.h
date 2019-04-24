@@ -23,6 +23,10 @@ class DataPage : public Page {
   void SetNextPageID(PageID next_page_id) {
     *reinterpret_cast<PageID *>(data() + 8) = next_page_id;
   }
+
+  int32_t GetTupleCount() {
+    return *reinterpret_cast<int32_t *>(data() + 16);
+  }
   
  private:
   PageID GetPrevPageID() {
@@ -31,10 +35,6 @@ class DataPage : public Page {
 
   int32_t GetFreePointer() {
     return *reinterpret_cast<int32_t *>(data() + 12);
-  }
-
-  int32_t GetTupleCount() {
-    return *reinterpret_cast<int32_t *>(data() + 16);
   }
 
   int32_t GetTupleOffset(int32_t i) {
