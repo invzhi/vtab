@@ -8,11 +8,13 @@
 
 class Double : public Type {
  public:
-  // Double() {}
+  Double() : Type(TypeID::DOUBLE) {}
 
   bool is_fixed() const override { return true; };
   int32_t fixed_length() const override { return sizeof(double); };
+
   void SerializeTo(char *dest, const Value &value) const override;
+  Value DeserializeFrom(const char *src) const override;
 };
 
 #endif

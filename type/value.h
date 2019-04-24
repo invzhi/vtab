@@ -23,6 +23,11 @@ class Value {
     value_.real = value;
   }
 
+  Value(TypeID type_id, const char *src, int32_t length) : type_id_(type_id) {
+    variable_length_ = length;
+    value_.text = new char[variable_length_];
+    std::memcpy(value_.text, src, variable_length_);
+  }
   Value(TypeID type_id, const std::string str) : type_id_(type_id) {
     variable_length_ = str.length() + 1;
     value_.text = new char[variable_length_];
@@ -35,9 +40,21 @@ class Value {
     }
   }
 
+  Value(const Value &other);
+  // Value &operator=(Value other);
+
   int32_t variable_length() const { return variable_length_; }
+
   void SerializeTo(char *dest) const {
     Type::GetInstance(type_id_)->SerializeTo(dest, *this);
+  }
+
+  static Value DeserializeFrom(const char *src, const TypeID type_id) {
+    return Type::GetInstance(type_id)->DeserializeFrom(src);
+  }
+
+  template <class T> inline T GetAs() const {
+    return *reinterpret_cast<const T *>(&value_);
   }
  
  private:
