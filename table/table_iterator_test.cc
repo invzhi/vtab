@@ -20,6 +20,8 @@ TEST(TableIteratorTest, ScanTest) {
   BufferPool buffer_pool(100, &disk);
   TableHeap table_heap(&buffer_pool);
 
+  ASSERT_TRUE(table_heap.begin() == table_heap.end());
+
   Tuple tuple;
   tuple.SetData("hello tuple", 11);
   RowID row_id;

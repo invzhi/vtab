@@ -95,6 +95,12 @@ bool TableHeap::DeleteTuple(const RowID &row_id) {
 
 TableIterator TableHeap::begin() {
   RowID row_id(first_page_id_, 0);
+  auto page = reinterpret_cast<DataPage *>(buffer_pool_->FetchPage(first_page_id_));
+  page->RLock();
+  if (page->GetTupleCount() == 0)
+    row_id.Set(INVALID_PAGE_ID, 0);
+  page->RUnlock();
+  buffer_pool_->UnpinPage(page->id(), false);
   return TableIterator(this, row_id);
 }
 
