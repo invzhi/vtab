@@ -15,6 +15,11 @@ class RowID {
   int64_t Get() const {
     return int64_t(page_id_) << 32 | slot_number_;
   }
+
+  void Set(int64_t row_id) {
+    page_id_ = row_id >> 32;
+    slot_number_ = row_id;
+  }
   void Set(PageID page_id, int32_t slot_number) {
     page_id_ = page_id;
     slot_number_ = slot_number;
