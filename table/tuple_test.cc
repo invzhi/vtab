@@ -39,7 +39,7 @@ TEST(TupleTest, DataTest) {
   // check
   EXPECT_EQ(-1, vals[0].GetAs<int64_t>());
   EXPECT_EQ(9.9, vals[1].GetAs<double>());
-  EXPECT_TRUE(std::strcmp("HELLO", vals[2].GetAs<char *>()));
+  EXPECT_EQ(0, std::strcmp("HELLO", vals[2].GetAs<char *>()));
   EXPECT_EQ(16, vals[3].GetAs<int64_t>());
-  EXPECT_TRUE(std::strcmp("LAST_COLUMN", vals[4].GetAs<char *>()));
+  EXPECT_EQ(0, std::strcmp("LAST_COLUMN", vals[4].GetAs<char *>()));
 }
