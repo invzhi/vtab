@@ -23,8 +23,6 @@ void Disk::DeallocatePage(PageID page_id) {
 }
 
 void Disk::ReadPage(PageID page_id, char *data) {
-  assert(page_id < next_page_id_);
-
   int offset = page_id * PAGE_SIZE;
   db_io_.seekg(offset);
   db_io_.read(data, PAGE_SIZE);
