@@ -17,6 +17,8 @@ class TableIterator {
   }
   ~TableIterator() { delete tuple_; }
 
+  int64_t GetRowID() { return row_id_.Get(); }
+
   bool operator==(const TableIterator &other) const {
     return row_id_.Get() == other.row_id_.Get();
   }
