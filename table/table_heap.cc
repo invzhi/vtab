@@ -93,6 +93,24 @@ bool TableHeap::DeleteTuple(const RowID &row_id) {
   return true;
 }
 
+void TableHeap::Drop() {
+  PageID page_id = first_page_id_;
+  DataPage *data_page = nullptr;
+
+  while (page_id != INVALID_PAGE_ID) {
+    data_page = static_cast<DataPage *>(buffer_pool_->FetchPage(page_id));
+    if (data_page == nullptr)
+      return;
+    data_page->RLock();
+    PageID next_page_id = data_page->GetNextPageID();
+    data_page->RUnlock();
+
+    buffer_pool_->UnpinPage(page_id, false);
+    buffer_pool_->DeletePage(page_id);
+    page_id = next_page_id;
+  }
+}
+
 TableIterator TableHeap::begin() {
   RowID row_id(first_page_id_, 0);
   auto page = reinterpret_cast<DataPage *>(buffer_pool_->FetchPage(first_page_id_));
