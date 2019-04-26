@@ -14,9 +14,9 @@ Type *Type::types_[] = {
 };
 
 void Type::SerializeTo(char *dest, const Value &value) const {
-  throw std::runtime_error("no implementation");
+  throw std::runtime_error("no implementation for SerializeTo");
 }
 
 Value Type::DeserializeFrom(const char *src) const {
-  throw std::runtime_error("no implementation");
+  throw std::runtime_error("no implementation for DeserializeFrom");
 }
