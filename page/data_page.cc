@@ -37,28 +37,18 @@ bool DataPage::GetTuple(const int32_t slot_number, Tuple &tuple) {
   
   int32_t offset = GetTupleOffset(slot_number);
   int32_t size = GetTupleSize(slot_number);
+  if (size < 0)
+    return false;
   tuple.SetData(data() + offset, size);
   return true;
 }
 
-bool DataPage::DeleteTuple(const int32_t slot_number) {
+bool DataPage::MarkDelete(const int32_t slot_number) {
   if (slot_number >= GetTupleCount())
     return false;
 
-  int32_t offset = GetTupleOffset(slot_number);
-  int32_t size = GetTupleSize(slot_number);
-  // header
-  int32_t tuple_count = GetTupleCount();
-  for (int32_t i = slot_number; i + 1 < tuple_count; ++i) {
-    SetTupleOffset(i, GetTupleOffset(i + 1) + size);
-    SetTupleSize(i, GetTupleSize(i + 1));
-  }
-  SetTupleCount(--tuple_count);
-  // data
-  int32_t free_pointer = GetFreePointer();
-  std::memmove(data() + free_pointer + size, data() + free_pointer,
-               offset - free_pointer);
-  SetFreePointer(free_pointer + size);
+  int32_t tuple_size = GetTupleSize(slot_number);
+  SetTupleSize(slot_number, -tuple_size);
   return true;
 }
 

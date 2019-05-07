@@ -13,7 +13,7 @@ class DataPage : public Page {
 
   bool GetTuple(const int32_t slot_number, Tuple &tuple);
   bool InsertTuple(int32_t &slot_number, const Tuple &tuple);
-  bool DeleteTuple(const int32_t slot_number);
+  bool MarkDelete(const int32_t slot_number);
   bool UpdateTuple(const int32_t slot_number, const Tuple &tuple);
 
   PageID GetNextPageID() {
