@@ -51,6 +51,7 @@ TEST(DataPageTest, CRUDTest) {
   EXPECT_TRUE(data_page.MarkDelete(0));
   // get again
   EXPECT_FALSE(data_page.GetTuple(0, tuple));
+  EXPECT_FALSE(data_page.UpdateTuple(0, tuple));
   for (int i = 1; i < 4; ++i) {
     if (i == 2) continue;
     std::string str(10+i, 'a'+i);

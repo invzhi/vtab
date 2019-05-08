@@ -58,6 +58,8 @@ bool DataPage::UpdateTuple(const int32_t slot_number, const Tuple &tuple) {
 
   int32_t offset = GetTupleOffset(slot_number);
   int32_t size = GetTupleSize(slot_number);
+  if (size < 0)
+    return false;
   if (tuple.length() == size) {
     std::memcpy(data() + offset, tuple.data(), size);
     return true;
