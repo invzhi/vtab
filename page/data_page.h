@@ -11,6 +11,9 @@ class DataPage : public Page {
  public:
   void Init(PageID prev_page_id);
 
+  bool GetFirstSlotNum(int32_t &slot_num);
+  bool GetNextSlotNum(int32_t &slot_num);
+
   bool GetTuple(const int32_t slot_number, Tuple &tuple);
   bool InsertTuple(int32_t &slot_number, const Tuple &tuple);
   bool MarkDelete(const int32_t slot_number);

@@ -13,6 +13,28 @@ void DataPage::Init(PageID prev_page_id) {
   SetTupleCount(0);
 }
 
+bool DataPage::GetFirstSlotNum(int32_t &slot_num) {
+  int32_t tuple_count = GetTupleCount();
+  for (int32_t i = 0; i < tuple_count; ++i) {
+    if (GetTupleSize(i) > 0) {
+      slot_num = i;
+      return true;
+    }
+  }
+  return false;
+}
+
+bool DataPage::GetNextSlotNum(int32_t &slot_num) {
+  int32_t tuple_count = GetTupleCount();
+  for (int32_t i = slot_num + 1; i < tuple_count; ++i) {
+    if (GetTupleSize(i) > 0) {
+      slot_num = i;
+      return true;
+    }
+  }
+  return false;
+}
+
 bool DataPage::InsertTuple(int32_t &slot_number, const Tuple &tuple) {
   if (GetFreeSpace() < tuple.length() + 8)
     return false;
