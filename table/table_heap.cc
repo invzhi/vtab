@@ -115,21 +115,21 @@ void TableHeap::Drop() {
 
 TableIterator TableHeap::begin() {
   PageID page_id = first_page_id_;
-  int32_t slot_num = 0;
   auto page = static_cast<DataPage *>(buffer_pool_->FetchPage(page_id));
   assert(page);
 
+  int32_t slot_num;
   page->RLock();
   while (!page->GetFirstSlotNum(slot_num)) {
-    PageID next_page_id = page->GetNextPageID();
+    page_id = page->GetNextPageID();
     page->RUnlock();
-    buffer_pool_->UnpinPage(page_id, false);
+    buffer_pool_->UnpinPage(page->id(), false);
 
-    if (next_page_id == INVALID_PAGE_ID)
+    if (page_id == INVALID_PAGE_ID)
       return TableIterator(this, RowID());
-    page_id = next_page_id;
     page = static_cast<DataPage *>(buffer_pool_->FetchPage(page_id));
     assert(page);
+
     page->RLock();
   }
   page->RUnlock();
