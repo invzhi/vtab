@@ -40,7 +40,7 @@ class VirtualTable {
     return table_heap_->UpdateTuple(row_id, tuple);
   }
   bool DeleteTuple(const RowID &row_id) {
-    return table_heap_->DeleteTuple(row_id);
+    return table_heap_->MarkDelete(row_id);
   }
   void Drop() { table_heap_->Drop(); }
 
