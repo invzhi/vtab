@@ -10,7 +10,7 @@ class TableIterator {
  public:
   TableIterator(TableHeap *table_heap, RowID row_id) :
       table_heap_(table_heap), row_id_(row_id) {
-    if (row_id_.page_id() != INVALID_PAGE_ID) {
+    if (row_id_.GetPageID() != INVALID_PAGE_ID) {
       tuple_ = new Tuple();
       table_heap_->GetTuple(row_id_, *tuple_);
     }
@@ -20,7 +20,8 @@ class TableIterator {
   int64_t GetRowID() { return row_id_.Get(); }
 
   bool operator==(const TableIterator &other) const {
-    return row_id_.Get() == other.row_id_.Get();
+    // end() == INVALID_PAGE_ID
+    return row_id_.GetPageID() == other.row_id_.GetPageID();
   }
   bool operator!=(const TableIterator &other) const {
     return !(*this == other);

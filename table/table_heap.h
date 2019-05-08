@@ -27,7 +27,7 @@ class TableHeap {
   bool GetTuple(const RowID &row_id, Tuple &tuple);
   bool InsertTuple(RowID &row_id, const Tuple &tuple);
   bool UpdateTuple(const RowID &row_id, const Tuple &tuple);
-  bool DeleteTuple(const RowID &row_id);
+  bool MarkDelete(const RowID &row_id);
   void Drop();
 
   TableIterator begin();

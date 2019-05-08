@@ -1,16 +1,18 @@
 #include "table/table_heap.h"
 
+#include <cassert>
+
 #include "page/page.h"
 #include "table/table_iterator.h"
 
 bool TableHeap::GetTuple(const RowID &row_id, Tuple &tuple) {
-  PageID page_id = row_id.page_id();
+  PageID page_id = row_id.GetPageID();
   auto data_page = static_cast<DataPage *>(buffer_pool_->FetchPage(page_id));
   if (data_page == nullptr)
     return false;
 
   data_page->RLock();
-  bool ok = data_page->GetTuple(row_id.slot_number(), tuple);
+  bool ok = data_page->GetTuple(row_id.GetSlotNum(), tuple);
   data_page->RUnlock();
 
   buffer_pool_->UnpinPage(page_id, false);
@@ -66,27 +68,27 @@ bool TableHeap::InsertTuple(RowID &row_id, const Tuple &tuple) {
 }
 
 bool TableHeap::UpdateTuple(const RowID &row_id, const Tuple &tuple) {
-  PageID page_id = row_id.page_id();
+  PageID page_id = row_id.GetPageID();
   auto data_page = static_cast<DataPage *>(buffer_pool_->FetchPage(page_id));
   if (data_page == nullptr)
     return false;
 
   data_page->WLock();
-  bool is_updated = data_page->UpdateTuple(row_id.slot_number(), tuple);
+  bool is_updated = data_page->UpdateTuple(row_id.GetSlotNum(), tuple);
   data_page->WUnlock();
 
   buffer_pool_->UnpinPage(page_id, is_updated);
   return is_updated;
 }
 
-bool TableHeap::DeleteTuple(const RowID &row_id) {
-  PageID page_id = row_id.page_id();
+bool TableHeap::MarkDelete(const RowID &row_id) {
+  PageID page_id = row_id.GetPageID();
   auto data_page = static_cast<DataPage *>(buffer_pool_->FetchPage(page_id));
   if (data_page == nullptr)
     return false;
 
   data_page->WLock();
-  bool is_deleted = data_page->DeleteTuple(row_id.slot_number());
+  bool is_deleted = data_page->MarkDelete(row_id.GetSlotNum());
   data_page->WUnlock();
 
   buffer_pool_->UnpinPage(page_id, is_deleted);
@@ -112,17 +114,30 @@ void TableHeap::Drop() {
 }
 
 TableIterator TableHeap::begin() {
-  RowID row_id(first_page_id_, 0);
-  auto page = reinterpret_cast<DataPage *>(buffer_pool_->FetchPage(first_page_id_));
+  PageID page_id = first_page_id_;
+  int32_t slot_num = 0;
+  auto page = static_cast<DataPage *>(buffer_pool_->FetchPage(page_id));
+  assert(page);
+
   page->RLock();
-  if (page->GetTupleCount() == 0)
-    row_id.Set(INVALID_PAGE_ID, 0);
+  while (!page->GetFirstSlotNum(slot_num)) {
+    PageID next_page_id = page->GetNextPageID();
+    page->RUnlock();
+    buffer_pool_->UnpinPage(page_id, false);
+
+    if (next_page_id == INVALID_PAGE_ID)
+      return TableIterator(this, RowID());
+    page_id = next_page_id;
+    page = static_cast<DataPage *>(buffer_pool_->FetchPage(page_id));
+    assert(page);
+    page->RLock();
+  }
   page->RUnlock();
   buffer_pool_->UnpinPage(page->id(), false);
-  return TableIterator(this, row_id);
+
+  return TableIterator(this, RowID(page_id, slot_num));
 }
 
 TableIterator TableHeap::end() {
-  RowID row_id;
-  return TableIterator(this, row_id);
+  return TableIterator(this, RowID());
 }
