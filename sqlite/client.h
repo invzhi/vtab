@@ -10,6 +10,7 @@ class StorageEngine {
 public:
   StorageEngine(const std::string db_name);
   ~StorageEngine() {
+    buffer_pool_->FlushAllPages();
     delete disk_;
     delete buffer_pool_;
   }

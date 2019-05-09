@@ -18,6 +18,7 @@ class BufferPool {
   Page *FetchPage(PageID page_id);
   bool UnpinPage(PageID page_id, bool is_dirty);
   bool FlushPage(PageID page_id);
+  void FlushAllPages();
   bool DeletePage(PageID page_id);
 
  private:

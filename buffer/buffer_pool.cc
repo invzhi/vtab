@@ -1,6 +1,7 @@
 #include "buffer/buffer_pool.h"
 
 #include <utility>
+#include <cassert>
 
 #include "page/page.h"
 #include "buffer/lru.h"
@@ -115,6 +116,19 @@ bool BufferPool::FlushPage(PageID page_id) {
   Page *page = it->second;
   disk_->WritePage(page_id, page->data_);
   return true;
+}
+
+void BufferPool::FlushAllPages() {
+  for (auto &p : *page_table_) {
+    Page *page = p.second;
+    assert(p.first == page->id_);
+    if (page->is_dirty_) {
+      page->RLock();
+      disk_->WritePage(page->id_, page->data_);
+      page->RUnlock();
+      page->is_dirty_ = false;
+    }
+  }
 }
 
 bool BufferPool::DeletePage(PageID page_id) {
