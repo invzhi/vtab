@@ -17,6 +17,9 @@ class Disk {
   void WritePage(PageID page_id, const char *data);
 
  private:
+  int GetFileSize();
+
+  std::string db_name_;
   std::fstream db_io_; // TODO: change to O_DIRECT, without internal buffer
   PageID next_page_id_ = 0;
 };
