@@ -35,12 +35,13 @@ TEST(BufferPoolTest, SampleTest) {
   for (PageID i = 0; i < 5; ++i) {
     EXPECT_EQ(true, buffer_pool.UnpinPage(i, true));
   }
-  // we have 5 empty slots in LRU list, evict page zero out of buffer pool
+  // we have 5 empty slots in LRU list, evict page 0-4 out of buffer pool
   for (int i = 0; i < 4; ++i) {
     EXPECT_NE(nullptr, buffer_pool.NewPage());
   }
   // fetch page one again
   page_zero = buffer_pool.FetchPage(0);
+  ASSERT_NE(nullptr, page_zero);
   // check read content
   EXPECT_EQ(0, strcmp(page_zero->GetData(), "Hello"));
 
