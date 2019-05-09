@@ -19,7 +19,7 @@ class TableHeap {
   // create table
   TableHeap(BufferPool *buffer_pool) : buffer_pool_(buffer_pool) {
     auto data_page = static_cast<DataPage *>(buffer_pool_->NewPage());
-    first_page_id_ = data_page->id();
+    first_page_id_ = data_page->GetID();
     data_page->Init(INVALID_PAGE_ID);
     buffer_pool_->UnpinPage(first_page_id_, true);
   }

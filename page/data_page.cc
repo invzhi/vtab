@@ -42,7 +42,7 @@ bool DataPage::InsertTuple(int32_t &slot_number, const Tuple &tuple) {
   // data
   int32_t offset = GetFreePointer() - tuple.length();
   SetFreePointer(offset);
-  std::memcpy(data() + offset, tuple.data(), tuple.length());
+  std::memcpy(GetData() + offset, tuple.data(), tuple.length());
   // header
   int32_t i = GetTupleCount();
   SetTupleOffset(i, offset);
@@ -61,7 +61,7 @@ bool DataPage::GetTuple(const int32_t slot_number, Tuple &tuple) {
   int32_t size = GetTupleSize(slot_number);
   if (size < 0)
     return false;
-  tuple.SetData(data() + offset, size);
+  tuple.SetData(GetData() + offset, size);
   return true;
 }
 
@@ -83,7 +83,7 @@ bool DataPage::UpdateTuple(const int32_t slot_number, const Tuple &tuple) {
   if (size < 0)
     return false;
   if (tuple.length() == size) {
-    std::memcpy(data() + offset, tuple.data(), size);
+    std::memcpy(GetData() + offset, tuple.data(), size);
     return true;
   }
   if (GetFreeSpace() < tuple.length() - size)
@@ -91,9 +91,9 @@ bool DataPage::UpdateTuple(const int32_t slot_number, const Tuple &tuple) {
   // data
   int32_t free_pointer = GetFreePointer();
   int32_t shift = size - tuple.length();
-  std::memmove(data() + free_pointer + shift,
-               data() + free_pointer, offset - free_pointer);
-  std::memcpy(data() + offset + shift, tuple.data(), tuple.length());
+  std::memmove(GetData() + free_pointer + shift,
+               GetData() + free_pointer, offset - free_pointer);
+  std::memcpy(GetData() + offset + shift, tuple.data(), tuple.length());
   // header
   SetTupleOffset(slot_number, offset + shift);
   SetTupleSize(slot_number, tuple.length());

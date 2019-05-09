@@ -28,10 +28,10 @@ StorageEngine::StorageEngine(const std::string db_name) {
 
   if (!is_file_exist) {
     auto header_page = static_cast<HeaderPage *>(buffer_pool_->NewPage());
-    assert(header_page->id() == HEADER_PAGE_ID);
+    assert(header_page->GetID() == HEADER_PAGE_ID);
     header_page->WLock();
     header_page->Init();
     header_page->WUnlock();
-    buffer_pool_->UnpinPage(header_page->id(), true);
+    buffer_pool_->UnpinPage(header_page->GetID(), true);
   }
 }

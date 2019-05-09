@@ -36,7 +36,7 @@ bool TableHeap::InsertTuple(RowID &row_id, const Tuple &tuple) {
 
     if (next_page_id != INVALID_PAGE_ID) {
       data_page->WUnlock();
-      buffer_pool_->UnpinPage(data_page->id(), false);
+      buffer_pool_->UnpinPage(data_page->GetID(), false);
 
       data_page = static_cast<DataPage *>(buffer_pool_->FetchPage(next_page_id));
       if (data_page == nullptr)
@@ -47,23 +47,23 @@ bool TableHeap::InsertTuple(RowID &row_id, const Tuple &tuple) {
       auto next_page = static_cast<DataPage *>(buffer_pool_->NewPage());
       if (next_page == nullptr) {
         data_page->WUnlock();
-        buffer_pool_->UnpinPage(data_page->id(), false);
+        buffer_pool_->UnpinPage(data_page->GetID(), false);
         return false;
       }
 
-      data_page->SetNextPageID(next_page->id());
+      data_page->SetNextPageID(next_page->GetID());
       data_page->WUnlock();
 
       next_page->WLock();
-      next_page->Init(data_page->id());
+      next_page->Init(data_page->GetID());
 
-      buffer_pool_->UnpinPage(data_page->id(), true);
+      buffer_pool_->UnpinPage(data_page->GetID(), true);
       data_page = next_page;
     }
   }
-  row_id.Set(data_page->id(), slot_number);
+  row_id.Set(data_page->GetID(), slot_number);
   data_page->WUnlock();
-  buffer_pool_->UnpinPage(data_page->id(), true);
+  buffer_pool_->UnpinPage(data_page->GetID(), true);
   return true;
 }
 
@@ -123,7 +123,7 @@ TableIterator TableHeap::begin() {
   while (!page->GetFirstSlotNum(slot_num)) {
     page_id = page->GetNextPageID();
     page->RUnlock();
-    buffer_pool_->UnpinPage(page->id(), false);
+    buffer_pool_->UnpinPage(page->GetID(), false);
 
     if (page_id == INVALID_PAGE_ID)
       return TableIterator(this, RowID());
@@ -133,7 +133,7 @@ TableIterator TableHeap::begin() {
     page->RLock();
   }
   page->RUnlock();
-  buffer_pool_->UnpinPage(page->id(), false);
+  buffer_pool_->UnpinPage(page->GetID(), false);
 
   return TableIterator(this, RowID(page_id, slot_num));
 }

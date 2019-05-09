@@ -5,8 +5,8 @@
 
 #include "config.h"
 
-#define HEADER_PAGE_ID 0
 #define INVALID_PAGE_ID -1
+#define HEADER_PAGE_ID   0
 
 using PageID = int32_t;
 
@@ -19,8 +19,8 @@ class Page {
   void WLock() { mutex_.lock(); }
   void WUnlock() { mutex_.unlock(); }
 
-  PageID id() const { return id_; }
-  char *data() { return data_; }
+  PageID GetID() const { return id_; }
+  char *GetData() { return data_; }
 
  private:
   PageID id_;

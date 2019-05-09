@@ -19,10 +19,10 @@ TEST(BufferPoolTest, SampleTest) {
 
   Page *page_zero = buffer_pool.NewPage();
   ASSERT_NE(nullptr, page_zero);
-  EXPECT_EQ(0, page_zero->id());
+  EXPECT_EQ(0, page_zero->GetID());
 
   // change page content
-  std::strcpy(page_zero->data(), "Hello");
+  std::strcpy(page_zero->GetData(), "Hello");
 
   for (int i = 1; i < 10; ++i) {
     EXPECT_NE(nullptr, buffer_pool.NewPage());
@@ -42,7 +42,7 @@ TEST(BufferPoolTest, SampleTest) {
   // fetch page one again
   page_zero = buffer_pool.FetchPage(0);
   // check read content
-  EXPECT_EQ(0, strcmp(page_zero->data(), "Hello"));
+  EXPECT_EQ(0, strcmp(page_zero->GetData(), "Hello"));
 
   std::remove("test.db");
 }

@@ -20,32 +20,32 @@ class DataPage : public Page {
   bool UpdateTuple(const int32_t slot_number, const Tuple &tuple);
 
   PageID GetNextPageID() {
-    return *reinterpret_cast<PageID *>(data() + 8);
+    return *reinterpret_cast<PageID *>(GetData() + 8);
   }
 
   void SetNextPageID(PageID next_page_id) {
-    *reinterpret_cast<PageID *>(data() + 8) = next_page_id;
+    *reinterpret_cast<PageID *>(GetData() + 8) = next_page_id;
   }
 
   int32_t GetTupleCount() {
-    return *reinterpret_cast<int32_t *>(data() + 16);
+    return *reinterpret_cast<int32_t *>(GetData() + 16);
   }
   
  private:
   PageID GetPrevPageID() {
-    return *reinterpret_cast<PageID *>(data() + 4);
+    return *reinterpret_cast<PageID *>(GetData() + 4);
   }
 
   int32_t GetFreePointer() {
-    return *reinterpret_cast<int32_t *>(data() + 12);
+    return *reinterpret_cast<int32_t *>(GetData() + 12);
   }
 
   int32_t GetTupleOffset(int32_t i) {
-    return *reinterpret_cast<int32_t *>(data() + 20 + i*8);
+    return *reinterpret_cast<int32_t *>(GetData() + 20 + i*8);
   }
 
   int32_t GetTupleSize(int32_t i) {
-    return *reinterpret_cast<int32_t *>(data() + 24 + i*8);
+    return *reinterpret_cast<int32_t *>(GetData() + 24 + i*8);
   }
 
   int32_t GetFreeSpace() {
@@ -53,23 +53,23 @@ class DataPage : public Page {
   }
 
   void SetPrevPageID(PageID prev_page_id) {
-    *reinterpret_cast<PageID *>(data() + 4) = prev_page_id;
+    *reinterpret_cast<PageID *>(GetData() + 4) = prev_page_id;
   }
 
   void SetFreePointer(int32_t free_pointer) {
-    *reinterpret_cast<int32_t *>(data() + 12) = free_pointer;
+    *reinterpret_cast<int32_t *>(GetData() + 12) = free_pointer;
   }
 
   void SetTupleCount(int32_t tuple_count) {
-    *reinterpret_cast<int32_t *>(data() + 16) = tuple_count;
+    *reinterpret_cast<int32_t *>(GetData() + 16) = tuple_count;
   }
 
   void SetTupleOffset(int32_t i, int32_t tuple_offset) {
-    *reinterpret_cast<int32_t *>(data() + 20 + i*8) = tuple_offset;
+    *reinterpret_cast<int32_t *>(GetData() + 20 + i*8) = tuple_offset;
   }
 
   void SetTupleSize(int32_t i, int32_t tuple_size) {
-    *reinterpret_cast<int32_t *>(data() + 24 + i*8) = tuple_size;
+    *reinterpret_cast<int32_t *>(GetData() + 24 + i*8) = tuple_size;
   }
 };
 
