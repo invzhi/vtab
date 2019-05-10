@@ -91,7 +91,8 @@ bool BufferPool::UnpinPage(PageID page_id, bool is_dirty) {
   }
 
   Page *page = it->second;
-  page->is_dirty_ = is_dirty;
+  if (is_dirty)
+    page->is_dirty_ = true;
 
   if (page->pin_count_ <= 0) {
     return false;
