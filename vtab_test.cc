@@ -41,6 +41,7 @@ TEST(VtabTest, SQLTest) {
     ASSERT_EQ(SQLITE_DONE, sqlite3_step(insert_stmt));
     ASSERT_EQ(SQLITE_OK, sqlite3_reset(insert_stmt));
   }
+  ASSERT_EQ(SQLITE_OK, sqlite3_finalize(insert_stmt));
   
   // select
   int iRow = 0;
@@ -83,6 +84,26 @@ TEST(VtabTest, SQLTest) {
     EXPECT_EQ(0, std::strcmp(name, names[iRow].c_str()));
     ++iRow;
   }
+  ASSERT_EQ(SQLITE_OK, sqlite3_finalize(select_stmt));
+
+  sqlite3_close(db);
+
+  // test for xConnect
+  ASSERT_EQ(SQLITE_OK, sqlite3_open("test.db", &db));
+  ASSERT_EQ(SQLITE_OK, sqlite3_enable_load_extension(db, 1));
+  ASSERT_EQ(SQLITE_OK, sqlite3_load_extension(db, "libvtab", 0, &zErrMsg));
+
+  sql = "SELECT * FROM t";
+  ASSERT_EQ(SQLITE_OK, sqlite3_prepare_v2(db, sql.c_str(), sql.length()+1, &select_stmt, nullptr));
+  iRow = 2;
+  while (sqlite3_step(select_stmt) != SQLITE_DONE) {
+    auto name = reinterpret_cast<const char *>(sqlite3_column_text(select_stmt, 2));
+    EXPECT_EQ(sqlite3_column_int64(select_stmt, 0), ids[iRow]);
+    EXPECT_EQ(sqlite3_column_double(select_stmt, 1), ages[iRow]);
+    EXPECT_EQ(0, std::strcmp(name, names[iRow].c_str()));
+    ++iRow;
+  }
+  ASSERT_EQ(SQLITE_OK, sqlite3_finalize(select_stmt));
 
   sqlite3_close(db);
 
